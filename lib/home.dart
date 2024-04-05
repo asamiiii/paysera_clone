@@ -8,6 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:hive/hive.dart';
+import 'package:paysera/dummy_transation.dart';
+import 'package:paysera/transaction_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -87,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.qr_code_scanner,
                               color: Colors.white,
-                              size: 30.sp,
+                              size: 25.sp,
                             ),
                             SizedBox(
                               width: 10.w,
@@ -95,10 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.notifications_none_rounded,
                               color: Colors.white,
-                              size: 30.sp,
+                              size: 25.sp,
                             ),
                             SizedBox(
-                              width: 15.w,
+                              width: 30.w,
                             ),
                             Container(
                               height: 30.h,
@@ -149,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.settings_outlined,
                               color: Colors.white,
-                              size: 30.sp,
+                              size: 25.sp,
                             ),
                           ],
                         ),
@@ -177,7 +179,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.euro,color: Colors.white,size: 30.sp,),
+                            Icon(
+                              Icons.euro,
+                              color: Colors.white,
+                              size: 30.sp,
+                            ),
                             Text(
                               'O',
                               style: TextStyle(
@@ -203,19 +209,148 @@ class _HomeScreenState extends State<HomeScreen> {
                         gradient: LinearGradient(
                             colors: [HexColor('0D4E85'), HexColor('038DCC')])),
                   ),
-
                   Container(
                     color: HexColor('F1F2F6'),
                     width: screenWidth,
-                    height: 350.h,
-                    padding: EdgeInsets.all(8),
+                    height: screenHeight,
+                    padding: EdgeInsets.all(15),
                     child: Column(
                       children: [
                         Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10)
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Image.asset('images/banner.png')),
+                            SizedBox(height: 15.h,),
+                        Container(
+                          height: 35.h,
+                          child: Row(
+                            textDirection: TextDirection.rtl,
+                            children: [
+                              Text('اليوم',style: TextStyle(color: Colors.grey),),
+                            ],
                           ),
-                          child: Image.asset('images/banner.png')),
+                        ),
+                        SizedBox(
+                          height: 255.h,
+                          child: ListView.separated(
+                            padding: EdgeInsets.only(bottom: 20),
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>dummyData[index].sent==true ? OutGoingTransInfo(item: dummyData[index],):  InComingTransInfo(item: dummyData[index],),));
+                                },
+                                child: Container(
+                                  height: 70.h,
+                                  width: screenWidth,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  decoration: BoxDecoration(
+                                      color: HexColor('ffffff'),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft:
+                                            Radius.circular(index == 0 ? 10 : 0),
+                                        topRight:
+                                            Radius.circular(index == 0 ? 10 : 0),
+                                        bottomLeft: Radius.circular(
+                                            index == dummyData.length - 1
+                                                ? 10
+                                                : 0),
+                                        bottomRight: Radius.circular(
+                                            index == dummyData.length - 1
+                                                ? 10
+                                                : 0),
+                                      )),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        // crossAxisAlignment: CrossAxisAlignment.start,
+                                        textDirection: TextDirection.rtl,
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 22.sp,
+                                            backgroundColor: HexColor('73a5d2'),
+                                            child: Text(
+                                              'AS',
+                                              style:
+                                                  TextStyle(color: Colors.white),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 15.w,
+                                          ),
+                                          Column(
+                                            textDirection: TextDirection.rtl,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text('User Name'),
+                                              Text(
+                                                'User Name',
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 10.sp),
+                                              ),
+                                            ],
+                                          ),
+                                          Expanded(child: SizedBox()),
+                                          Row(
+                                            children: [
+                                              dummyData[index].sent == true
+                                                  ? Text(
+                                                      '-',
+                                                      style: TextStyle(
+                                                          color: Colors.red,
+                                                          fontSize: 20.sp),
+                                                    )
+                                                  : Text(
+                                                      '+',
+                                                      style: TextStyle(
+                                                          color: Colors.green,
+                                                          fontSize: 20.sp),
+                                                    ),
+                                              Icon(
+                                                Icons.euro,
+                                                size: 18.sp,
+                                                color:
+                                                    dummyData[index].sent == true
+                                                        ? Colors.red
+                                                        : Colors.green,
+                                              ),
+                                              Text(
+                                                '10',
+                                                style: TextStyle(
+                                                  fontSize: 15.sp,
+                                                  color: dummyData[index].sent ==
+                                                          true
+                                                      ? Colors.red
+                                                      : Colors.green,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return Divider(
+                                color: HexColor('f4f4f4'),
+                                height: 0,
+                                // indent: 100.w,
+                                endIndent: 70.w,
+                                thickness: 1,
+                              );
+                            },
+                            itemCount: dummyData.length,
+                          ),
+                        )
                       ],
                     ),
                   )
