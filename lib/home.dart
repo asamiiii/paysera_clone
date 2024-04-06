@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:hive/hive.dart';
 import 'package:paysera/dummy_transation.dart';
+import 'package:paysera/main_view.dart';
 import 'package:paysera/transaction_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: HexColor('F1F2F6'),
       body: isLoading == true
           ? Center(
               child: CircularProgressIndicator(),
@@ -148,10 +150,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Expanded(child: SizedBox()),
-                            Icon(
-                              Icons.settings_outlined,
-                              color: Colors.white,
-                              size: 25.sp,
+                            InkWell(
+                              onTap: () {
+                                 advancedDrawerController.showDrawer();
+                              },
+                              child: Icon(
+                                Icons.settings_outlined,
+                                color: Colors.white,
+                                size: 25.sp,
+                              ),
                             ),
                           ],
                         ),
@@ -210,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             colors: [HexColor('0D4E85'), HexColor('038DCC')])),
                   ),
                   Container(
-                    color: HexColor('F1F2F6'),
+                    color: HexColor('#F1F2F6'),
                     width: screenWidth,
                     height: screenHeight,
                     padding: EdgeInsets.all(15),
