@@ -94,13 +94,22 @@ class InComingTransInfo extends StatelessWidget {
                   item.iBan ?? 'Un known',
                   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
                 ),
-                // SizedBox(
-                //   height: 15.h,
-                // ),
-                // Text(
-                //   item.userName ?? 'Un known',
-                //   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
-                // ),
+                SizedBox(
+                  height: 15.h,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      item.bankName ?? '',
+                      style: TextStyle(fontSize: 14.sp, color: HexColor('858a90')),
+                    ),
+                    Text(
+                      ' Envoye depuis ',
+                      style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
+                    ),
+                  ],
+                ),
                 SizedBox(
                   height: 20.h,
                 ),
@@ -227,7 +236,7 @@ class OutGoingTransInfo extends StatelessWidget {
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
         backgroundColor: HexColor('f1f2f6'),
-        bottomNavigationBar: Container(
+        bottomNavigationBar: Container( 
           width: screenWidth,
           color: Colors.white,
           child: Image.asset('images/out.png',height: 50.h,)),

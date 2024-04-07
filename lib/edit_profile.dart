@@ -104,8 +104,6 @@ class _EditProfileState extends State<EditProfile> {
                         onPressed: () {
                           TextEditingController toController =
                               TextEditingController();
-                          TextEditingController idController =
-                              TextEditingController();
                           TextEditingController amountController =
                               TextEditingController();
                           TextEditingController BankNameController =
@@ -129,16 +127,7 @@ class _EditProfileState extends State<EditProfile> {
                                         // height: 500,
                                         child: Column(
                                           children: [
-                                            AppTextField(
-                                                controller: idController,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                icon: const Icon(Icons.abc),
-                                                hintText: 'required id',
-                                                label: 'required id'),
-                                                const SizedBox(
-                                              height: 10,
-                                            ),
+                                            
                                             AppTextField(
                                                 controller: BankNameController,
                                                 keyboardType:
@@ -273,7 +262,7 @@ class _EditProfileState extends State<EditProfile> {
                                           child: const Text('Send'),
                                           onPressed: () async {
                                             await addItemToLocal(DetailsData(
-                                              id: int.parse(idController.text),
+                                              id: DateTime.now().toString(),
                                                 ammount: amountController.text,
                                                 sent: sent,
                                                 userName: toController.text,

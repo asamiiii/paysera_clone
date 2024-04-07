@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
       mail = await CacheHelper.getStringFromCache(key: 'mail');
       // eurTotalPalance = prefs.getString('EUR_totalPalance');
       await getAllLocalTrans();
-      listData.sort((a, b) => a.time!.compareTo(b.time!));
+      listData.sort((b, a) => a.time!.compareTo(b.time!));
       debugPrint('list dat : $listData');
       isLoading = false;
       setState(() {});
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               width:  85.w,
                                               child: Text(
                                                 textAlign: TextAlign.center,
-                                                accountName ?? 'unknown@outlook.com',
+                                                accountName ?? 'Unknown Name',
                                                 style: TextStyle(
                                                     fontSize: 10.sp,
                                                     color: Colors.white),
@@ -303,11 +303,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25)),
                             child: Image.asset(
-                              'images/banner.png',
+                              'images/banner.jpg',
                               fit: BoxFit.fill,
                             )),
                         SizedBox(
-                          height: 15.h,
+                          height: 10.h,
                         ),
                         Container(
                           height: 35.h,
@@ -330,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 key: Key(listData[index].id.toString()),
                                 direction: DismissDirection.horizontal,
                                 onDismissed: (direction) async {
-                                  await deleteItem(listData[index].id ?? 0);
+                                  await deleteItem(listData[index].id ?? '');
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -417,31 +417,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                             SizedBox(
                                               width: 15.w,
                                             ),
-                                            Column(
-                                              textDirection: TextDirection.rtl,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(listData[index].userName ??
-                                                    ''),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                         listData[index].sent==true?' Sent to ':  ' Envoye depuis ',
+                                            SizedBox(
+                                              child: Column(
+                                                textDirection: TextDirection.rtl,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    width: 170.w,
+                                                    child: Text(listData[index].userName ??
+                                                        '',overflow: TextOverflow.ellipsis,textAlign: TextAlign.end,),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 170.w,
+                                                    child: Text(
+                                                         listData[index].sent==true?' Sent to ${listData[index].bankName}':  ' Envoye depuis ${listData[index].bankName}',
                                                       style: TextStyle(
                                                           color: Colors.grey,
-                                                          fontSize: 10.sp),
+                                                          fontSize: 10.sp)
+                                                          ,overflow: TextOverflow.ellipsis,
+                                                          textAlign: TextAlign.end,
                                                     ),
-                                                    Text(
-                                                      listData[index].bankName ??
-                                                          '',
-                                                      style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 10.sp),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                             Expanded(child: SizedBox()),
                                             Row(

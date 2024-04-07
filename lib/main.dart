@@ -222,7 +222,7 @@ addItemToLocal(DetailsData item) async {
   persons?.add(item);
 }
 
-deleteItem(int id) async {
+deleteItem(String id) async {
   persons = await Hive.openBox('trans');
 
   final Map<dynamic, DetailsData> deliveriesMap = persons!.toMap();

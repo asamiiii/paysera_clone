@@ -17,7 +17,7 @@ class DetailsData extends HiveObject{
   @HiveField(6)
   String? iBan;
   @HiveField(7)
-  int? id;
+  String? id;
 
 
   DetailsData({this.id,this.bankName,this.userName,this.ammount,this.sent,this.time,this.imagePath,this.iBan});

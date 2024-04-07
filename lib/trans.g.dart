@@ -24,7 +24,7 @@ class DetailsDataAdapter extends TypeAdapter<DetailsData> {
       time: fields[4] as DateTime?,
       imagePath: fields[5] as String?,
       iBan: fields[6] as String?,
-      id: fields[7] as int?,
+      id: fields[7] as String?,
     );
   }
 
