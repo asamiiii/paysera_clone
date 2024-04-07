@@ -18,12 +18,17 @@ class InComingTransInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   String formattedDate = DateFormat(
+      'd MMM y',
+      
+    ).format(item.time!);
+    var list= formattedDate.split(' ');
+    String formattedTime = DateFormat('h:m a',).format(item.time!);
+    var timeList= formattedTime.split(' ');
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
-    String formattedDate = DateFormat(
-      'd MMM y',
-    ).format(item.time!);
-    String formattedTime = DateFormat('h:m a').format(item.time!);
+
+    debugPrint('date list : ${list.first}');
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
@@ -131,18 +136,34 @@ class InComingTransInfo extends StatelessWidget {
                   children: [
                     Text(
                       textDirection: ui.TextDirection.ltr,
-                      '$formattedTime',
-                      style: TextStyle(color: HexColor('94999d')),
-                    ),
-                    Text(
-                      '  at  ',
+                      ' ${list[0]}',
                       style: TextStyle(color: HexColor('94999d')),
                     ),
                     Text(
                       textDirection: ui.TextDirection.ltr,
-                      '$formattedDate',
+                      ' ${convertEnglishMonthToArabic(list[1])} ',
                       style: TextStyle(color: HexColor('94999d')),
                     ),
+                    Text(
+                      textDirection: ui.TextDirection.ltr,
+                      '${list[2]}',
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
+                    Text(
+                      ' علي',
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
+                    Text(
+                      textDirection: ui.TextDirection.ltr,
+                      '${timeList[0]} ',
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
+                    Text(
+                      textDirection: ui.TextDirection.ltr,
+                      timeList[1]=='AM'?' ص' :' م ' ,
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
+                    
                   ],
                 ),
                 Row(
@@ -196,15 +217,12 @@ class OutGoingTransInfo extends StatelessWidget {
       
     ).format(item.time!);
     var list= formattedDate.split(' ');
-    
-    debugPrint('date list : ${list.first}');
-    // String? day;
-    // String? month;
-    // String year;
     String formattedTime = DateFormat('h:m a',).format(item.time!);
     var timeList= formattedTime.split(' ');
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
+
+    debugPrint('date list : ${list.first}');
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(

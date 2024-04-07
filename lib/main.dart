@@ -56,15 +56,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Paysera',
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: [
-            const Locale('en'), // English
-            const Locale('ar'), // Arabic
-            // Add more locales if needed
-          ],
+          
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
             useMaterial3: true,
