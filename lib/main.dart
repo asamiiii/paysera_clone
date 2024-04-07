@@ -3,19 +3,32 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:paysera/cash_helper.dart';
 import 'package:paysera/main_view.dart';
+import 'package:paysera/trans.dart';
+import 'package:paysera/widgets.dart';
 
 FToast? fToast;
 HexColor mainColor = HexColor('#87EA5C');
-// Box<DetailsData>? persons;
+Box<DetailsData>? persons;
 
+String? accountName;
+String? iBan;
+String? bankName;
+String? bankAddress;
+String? swift_bic;
+String? bank_out_name;
+String? bank_out_address;
+String? bank_out_swift;
+
+String? mail;
 void main() async {
-  // image = null;
-  // imagePath = null;
-
+  image = null;
+  imagePath = null;
+// WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  // Hive.registerAdapter(DetailsDataAdapter());
-  // persons = await Hive.openBox('trans');
+  Hive.registerAdapter(DetailsDataAdapter());
+  persons = await Hive.openBox('trans');
   //  debugPrint('dummyData : $dummyData ');
   //  for (var element in dummyData) {
   //   persons?.add(element);
@@ -69,6 +82,14 @@ class _MyHomePageState extends State<SplashScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_)async {
     await checkFirstSeen();
+    accountName =await CacheHelper.getStringFromCache(key: 'account_name');
+    iBan =await CacheHelper.getStringFromCache(key: 'iban');
+    bankName =await CacheHelper.getStringFromCache(key: 'bank_name');
+    bankAddress =await CacheHelper.getStringFromCache(key: 'bank_address');
+    swift_bic =await CacheHelper.getStringFromCache(key: 'swift_bic');
+    bank_out_name =await CacheHelper.getStringFromCache(key: 'bank_out_name');
+    bank_out_address =await CacheHelper.getStringFromCache(key: 'bank_out_address');
+    bank_out_swift =await CacheHelper.getStringFromCache(key: 'bank_out_swift');
   });
    
     super.initState();
@@ -131,7 +152,7 @@ void openMainView() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: HexColor('#87EA5C'),
+      backgroundColor: HexColor('#0885C5'),
       body: Center(
           child: Image.asset(
         'images/logo.png',
@@ -153,3 +174,42 @@ showMessage({String? msg, bool? sucsess}) {
       textColor: Colors.white,
       fontSize: 16.0);
 }
+
+List<DetailsData> listData = [
+
+];
+
+
+Future<void> getAllLocalTrans() async {
+  persons = await Hive.openBox('trans');
+  var keys = persons?.keys;
+  listData.clear();
+  keys?.forEach((element) {
+    debugPrint('item key : $element');
+    var i = persons?.get(element);
+    if (i != null) {
+      listData.add(i);
+    }
+  });
+
+  debugPrint('listt : $listData');
+}
+
+addItemToLocal(DetailsData item) async {
+  persons = await Hive.openBox('trans');
+  persons?.add(item);
+}
+
+deleteItem(int id) async {
+  persons = await Hive.openBox('trans');
+
+  final Map<dynamic, DetailsData> deliveriesMap = persons!.toMap();
+  dynamic desiredKey;
+  deliveriesMap.forEach((key, value) {
+    if (value.id == id) {
+      desiredKey = key;
+    }
+  });
+  persons?.delete(desiredKey);
+}
+

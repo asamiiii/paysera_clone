@@ -8,10 +8,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:hive/hive.dart';
+import 'package:paysera/account_info.dart';
 import 'package:paysera/dummy_transation.dart';
+import 'package:paysera/edit_profile.dart';
+import 'package:paysera/main.dart';
 import 'package:paysera/main_view.dart';
+import 'package:paysera/trans.dart';
 import 'package:paysera/transaction_info.dart';
+import 'package:paysera/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:paysera/cash_helper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,29 +36,43 @@ class _HomeScreenState extends State<HomeScreen> {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       isLoading = true;
       setState(() {});
-      // eurTotalPalance = prefs.getString('EUR_totalPalance');
-
+      totalPalance = prefs.getString('totalPalance');
+      // eurAccountNumber =await  CacheHelper.getStringFromCache(key: 'EUR_account_number')??'Un Known';
+      // usdAccountNumber =await  CacheHelper.getStringFromCache(key: 'USD_account_number')??'Un Known';
       // gbpAccountNumber =await  CacheHelper.getStringFromCache(key: 'GBP_account_number')??'Un Known';
-      // userName =await getProfileName()??'AS';
-      // firstChar = getInitials(await getProfileName()??'AS');
-      // var profileImagePath = prefs.getString('profile_image');
-      // debugPrint('path : $profileImagePath');
-      // if (profileImagePath != null) {
-      //   image =  File(profileImagePath);
-      //   if (image!.existsSync()) {
-      //     // File exists, display the image
-      //     debugPrint('file is Exist');
-      //     Image.file(image!);
-      //   } else {
-      //     debugPrint('file is NOt Exist');
-      //     // File does not exist, handle the error
-      //     // You can display a placeholder image or show an error message
-      //   }
-      // }
+      userName = await getProfileName() ?? 'AS';
+      firstChar = getInitials(await getProfileName() ?? 'AS');
+      var profileImagePath = prefs.getString('profile_image');
+      debugPrint('path : $profileImagePath');
+      if (profileImagePath != null) {
+        image = File(profileImagePath);
+        if (image!.existsSync()) {
+          // File exists, display the image
+          debugPrint('file is Exist');
+          Image.file(image!);
+        } else {
+          debugPrint('file is NOt Exist');
+          // File does not exist, handle the error
+          // You can display a placeholder image or show an error message
+        }
+      }
+
+      accountName = await CacheHelper.getStringFromCache(key: 'account_name');
+      iBan = await CacheHelper.getStringFromCache(key: 'iban');
+      bankName = await CacheHelper.getStringFromCache(key: 'bank_name');
+      bankAddress = await CacheHelper.getStringFromCache(key: 'bank_address');
+      swift_bic = await CacheHelper.getStringFromCache(key: 'swift_bic');
+      bank_out_name =
+          await CacheHelper.getStringFromCache(key: 'bank_out_name');
+      bank_out_address =
+          await CacheHelper.getStringFromCache(key: 'bank_out_address');
+      bank_out_swift =
+          await CacheHelper.getStringFromCache(key: 'bank_out_swift');
+      mail = await CacheHelper.getStringFromCache(key: 'mail');
       // eurTotalPalance = prefs.getString('EUR_totalPalance');
-      // await getAllLocalTrans();
-      // listData.sort((a, b) => a.time!.compareTo(b.time!));
-      // debugPrint('list dat : $listData');
+      await getAllLocalTrans();
+      listData.sort((a, b) => a.time!.compareTo(b.time!));
+      debugPrint('list dat : $listData');
       isLoading = false;
       setState(() {});
     });
@@ -120,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Expanded(child: SizedBox()),
                                   Container(
                                     height: 30.h,
-                                    width: 125.w,
+                                    width: 130.w,
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 8.w, vertical: 1),
                                     decoration: BoxDecoration(
@@ -130,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Column(
                                       children: [
                                         Text(
-                                          'sami@outlook.commmmmmm',
+                                          mail ?? 'unknown@outlook.com',
                                           style: TextStyle(
                                               fontSize: 10.sp,
                                               color: Colors.white),
@@ -152,7 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             Expanded(child: SizedBox()),
                             InkWell(
                               onTap: () {
-                                 advancedDrawerController.showDrawer();
+                                advancedDrawerController.showDrawer();
+                                setState(() {});
                               },
                               child: Icon(
                                 Icons.settings_outlined,
@@ -165,20 +186,47 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(
                           height: 15.h,
                         ),
-                        Container(
-                          height: 20.h,
-                          width: 125.w,
-                          decoration: BoxDecoration(
-                            color: HexColor('2375A9'),
-                            borderRadius: BorderRadius.circular(25),
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              // backgroundColor: HexColor('F1F2F6'),
+                              builder: (context) => Container(
+                                width: screenWidth,
+                                height: screenHeight * 0.70,
+                                decoration: BoxDecoration(
+                                    color: HexColor('F1F2F6'),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(25),
+                                        topRight: Radius.circular(25))),
+                                child: AccountInfo(),
+                                // child: EuroDetails(
+                                //     type: 'EUR',
+                                //     accountDetails: AccountDetails(
+                                //         accountHolder: holder,
+                                //         accountNumber: accountNumber,
+                                //         iBAN: iBAN,
+                                //         sortCode: sortCode)
+                                //         ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 20.h,
+                            width: 125.w,
+                            decoration: BoxDecoration(
+                              color: HexColor('2375A9'),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Center(
+                                child: Text(
+                              iBan ?? 'Un known',
+                              style: TextStyle(
+                                  fontSize: 10.sp, color: Colors.white),
+                              overflow: TextOverflow.ellipsis,
+                            )),
                           ),
-                          child: Center(
-                              child: Text(
-                            'Ed52 5485 5487 rrrr',
-                            style:
-                                TextStyle(fontSize: 10.sp, color: Colors.white),
-                            overflow: TextOverflow.ellipsis,
-                          )),
                         ),
                         SizedBox(
                           height: 15.h,
@@ -192,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               size: 30.sp,
                             ),
                             Text(
-                              'O',
+                              totalPalance ?? 'O',
                               style: TextStyle(
                                   fontSize: 30.sp, color: Colors.white),
                               overflow: TextOverflow.ellipsis,
@@ -225,15 +273,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Container(
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Image.asset('images/banner.png')),
-                            SizedBox(height: 15.h,),
+                                borderRadius: BorderRadius.circular(25)),
+                            child: Image.asset(
+                              'images/banner.png',
+                              fit: BoxFit.fill,
+                            )),
+                        SizedBox(
+                          height: 15.h,
+                        ),
                         Container(
                           height: 35.h,
                           child: Row(
                             textDirection: TextDirection.rtl,
                             children: [
-                              Text('اليوم',style: TextStyle(color: Colors.grey),),
+                              Text(
+                                'اليوم',
+                                style: TextStyle(color: Colors.grey),
+                              ),
                             ],
                           ),
                         ),
@@ -242,106 +298,145 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: ListView.separated(
                             padding: EdgeInsets.only(bottom: 20),
                             itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>dummyData[index].sent==true ? OutGoingTransInfo(item: dummyData[index],):  InComingTransInfo(item: dummyData[index],),));
+                              return Dismissible(
+                                key: Key(listData[index].id.toString()),
+                                direction: DismissDirection.horizontal,
+                                onDismissed: (direction)async {
+                                  await deleteItem(listData[index].id ?? 0);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MainView()));
+        Fluttertoast.showToast(
+            msg: "Transaction is deleted",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
                                 },
-                                child: Container(
-                                  height: 70.h,
-                                  width: screenWidth,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5),
-                                  decoration: BoxDecoration(
-                                      color: HexColor('ffffff'),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft:
-                                            Radius.circular(index == 0 ? 10 : 0),
-                                        topRight:
-                                            Radius.circular(index == 0 ? 10 : 0),
-                                        bottomLeft: Radius.circular(
-                                            index == dummyData.length - 1
-                                                ? 10
-                                                : 0),
-                                        bottomRight: Radius.circular(
-                                            index == dummyData.length - 1
-                                                ? 10
-                                                : 0),
-                                      )),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        // crossAxisAlignment: CrossAxisAlignment.start,
-                                        textDirection: TextDirection.rtl,
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 22.sp,
-                                            backgroundColor: HexColor('73a5d2'),
-                                            child: Text(
-                                              'AS',
-                                              style:
-                                                  TextStyle(color: Colors.white),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 15.w,
-                                          ),
-                                          Column(
-                                            textDirection: TextDirection.rtl,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text('User Name'),
-                                              Text(
-                                                'User Name',
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 10.sp),
-                                              ),
-                                            ],
-                                          ),
-                                          Expanded(child: SizedBox()),
-                                          Row(
-                                            children: [
-                                              dummyData[index].sent == true
-                                                  ? Text(
-                                                      '-',
-                                                      style: TextStyle(
-                                                          color: Colors.red,
-                                                          fontSize: 20.sp),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              listData[index].sent == true
+                                                  ? OutGoingTransInfo(
+                                                      item: listData[index],
                                                     )
-                                                  : Text(
-                                                      '+',
-                                                      style: TextStyle(
-                                                          color: Colors.green,
-                                                          fontSize: 20.sp),
+                                                  : InComingTransInfo(
+                                                      item: listData[index],
                                                     ),
-                                              Icon(
-                                                Icons.euro,
-                                                size: 18.sp,
-                                                color:
-                                                    dummyData[index].sent == true
+                                        ));
+                                  },
+                                  child: Container(
+                                    height: 70.h,
+                                    width: screenWidth,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                        color: HexColor('ffffff'),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(
+                                              index == 0 ? 10 : 0),
+                                          topRight: Radius.circular(
+                                              index == 0 ? 10 : 0),
+                                          bottomLeft: Radius.circular(
+                                              index == listData.length - 1
+                                                  ? 10
+                                                  : 0),
+                                          bottomRight: Radius.circular(
+                                              index == listData.length - 1
+                                                  ? 10
+                                                  : 0),
+                                        )),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          // crossAxisAlignment: CrossAxisAlignment.start,
+                                          textDirection: TextDirection.rtl,
+                                          children: [
+                                            listData[index].imagePath == null ||
+                                                    listData[index].imagePath ==
+                                                        ''
+                                                ? CircleAvatar(
+                                                    radius: 22.sp,
+                                                    backgroundColor:
+                                                        HexColor('73a5d2'),
+                                                    child: Text(
+                                                      getInitials(listData[index]
+                                                              .userName ??
+                                                          ''),
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  )
+                                                : ClipOval(
+                                                    child: Image.file(
+                                                        fit: BoxFit.fill,
+                                                        File(listData[index].imagePath??''),
+                                                        height: 42.h,
+                                                        width: 42.w)),
+                                            SizedBox(
+                                              width: 15.w,
+                                            ),
+                                            Column(
+                                              textDirection: TextDirection.rtl,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(listData[index].userName??''),
+                                                Text(
+                                                 listData[index].bankName??'',
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 10.sp),
+                                                ),
+                                              ],
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            Row(
+                                              children: [
+                                                listData[index].sent == true
+                                                    ? Text(
+                                                        '-',
+                                                        style: TextStyle(
+                                                            color: Colors.red,
+                                                            fontSize: 20.sp),
+                                                      )
+                                                    : Text(
+                                                        '+',
+                                                        style: TextStyle(
+                                                            color: Colors.green,
+                                                            fontSize: 20.sp),
+                                                      ),
+                                                Icon(
+                                                  Icons.euro,
+                                                  size: 18.sp,
+                                                  color:
+                                                      listData[index].sent == true
+                                                          ? Colors.red
+                                                          : Colors.green,
+                                                ),
+                                                Text(
+                                                  listData[index].ammount??'',
+                                                  style: TextStyle(
+                                                    fontSize: 15.sp,
+                                                    color: listData[index].sent ==
+                                                            true
                                                         ? Colors.red
                                                         : Colors.green,
-                                              ),
-                                              Text(
-                                                '10',
-                                                style: TextStyle(
-                                                  fontSize: 15.sp,
-                                                  color: dummyData[index].sent ==
-                                                          true
-                                                      ? Colors.red
-                                                      : Colors.green,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      )
-                                    ],
+                                              ],
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
@@ -355,7 +450,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 thickness: 1,
                               );
                             },
-                            itemCount: dummyData.length,
+                            itemCount: listData.length,
                           ),
                         )
                       ],
@@ -538,3 +633,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //   });
 //   persons?.delete(desiredKey);
 // }
+
+String getInitials(String userName) => userName.isNotEmpty
+    ? userName.trim().split(RegExp(' +')).map((s) => s[0]).take(2).join()
+    : '';

@@ -1,9 +1,15 @@
+import 'dart:io';
+import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:paysera/dummy_transation.dart';
+import 'package:paysera/edit_profile.dart';
+import 'package:paysera/trans.dart';
 
 class InComingTransInfo extends StatelessWidget {
   DetailsData item;
@@ -11,10 +17,20 @@ class InComingTransInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+    String formattedDate = DateFormat(
+      'd MMM y',
+    ).format(item.time!);
+    String formattedTime = DateFormat('h:m a').format(item.time!);
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: ui.TextDirection.rtl,
       child: Scaffold(
         backgroundColor: HexColor('f1f2f6'),
+        bottomNavigationBar: Container(
+          width: screenWidth,
+          color: Colors.white,
+          child: Image.asset('images/come.png',height: 50.h,)),
         appBar: AppBar(
           leading: InkWell(
               onTap: () => Navigator.pop(context),
@@ -40,35 +56,43 @@ class InComingTransInfo extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 40.sp,
-                      backgroundColor: HexColor('73a5d2'),
-                      child: Text(
-                        'AS',
-                        style: TextStyle(color: Colors.white, fontSize: 30.sp),
-                      ),
-                    ),
+                    item.imagePath == null || item.imagePath == ''
+                        ? CircleAvatar(
+                            radius: 40.sp,
+                            backgroundColor: HexColor('73a5d2'),
+                            child: Text(
+                              getInitials(item.userName ?? ''),
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 30.sp),
+                            ),
+                          )
+                        : ClipOval(
+                            child: Image.file(
+                                fit: BoxFit.fill,
+                                File(item.imagePath ?? ''),
+                                height: 90.h,
+                                width: 90.w)),
                   ],
                 ),
                 SizedBox(
                   height: 25.h,
                 ),
                 Text(
-                  'User Name',
+                  item.userName ?? 'Un known',
                   style: TextStyle(fontSize: 20.sp),
                 ),
                 SizedBox(
                   height: 10.h,
                 ),
                 Text(
-                  '1254878454121545',
+                  item.iBan ?? 'Un known',
                   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
                 ),
                 SizedBox(
                   height: 15.h,
                 ),
                 Text(
-                  'kjhkjhjkhjkhjkh',
+                  item.userName ?? 'Un known',
                   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
                 ),
                 SizedBox(
@@ -78,15 +102,14 @@ class InComingTransInfo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                            '+',
-                            style:
-                                TextStyle(color: Colors.green, fontSize: 40.sp),
-                          ),
+                      '+',
+                      style: TextStyle(color: Colors.green, fontSize: 40.sp),
+                    ),
                     SizedBox(
                       width: 2.w,
                     ),
                     Text(
-                      '10',
+                      item.ammount ?? 'Un known',
                       style: TextStyle(
                         fontSize: 35.sp,
                         color: item.sent == true ? Colors.red : Colors.green,
@@ -95,7 +118,7 @@ class InComingTransInfo extends StatelessWidget {
                     Icon(
                       Icons.euro,
                       size: 40.sp,
-                      color:  Colors.green,
+                      color: Colors.green,
                     ),
                   ],
                 ),
@@ -106,9 +129,19 @@ class InComingTransInfo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '3 ابريل 2023 علي 11:30 ص',
+                      textDirection: ui.TextDirection.ltr,
+                      '$formattedTime',
                       style: TextStyle(color: HexColor('94999d')),
-                    )
+                    ),
+                    Text(
+                      '  at  ',
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
+                    Text(
+                      textDirection: ui.TextDirection.ltr,
+                      '$formattedDate',
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
                   ],
                 ),
                 Row(
@@ -121,13 +154,10 @@ class InComingTransInfo extends StatelessWidget {
                   ],
                 ),
                 Card(
-                  
                   color: HexColor('ffffff'),
                   surfaceTintColor: HexColor('ffffff'),
                   child: ListTile(
-                    onTap: () {
-                      
-                    },
+                    onTap: () {},
                     visualDensity: VisualDensity(vertical: 3), //
                     title: Text(
                       'الحصول علي كشف المعاملة',
@@ -154,19 +184,26 @@ class InComingTransInfo extends StatelessWidget {
   }
 }
 
-
 class OutGoingTransInfo extends StatelessWidget {
   DetailsData item;
-   OutGoingTransInfo({super.key,required this.item});
+  OutGoingTransInfo({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
-     var screenWidth = MediaQuery.of(context).size.width;
+     String formattedDate = DateFormat(
+      'd MMM y',
+    ).format(item.time!);
+    String formattedTime = DateFormat('h:m a').format(item.time!);
+    var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: ui.TextDirection.rtl,
       child: Scaffold(
         backgroundColor: HexColor('f1f2f6'),
+        bottomNavigationBar: Container(
+          width: screenWidth,
+          color: Colors.white,
+          child: Image.asset('images/come.png',height: 50.h,)),
         appBar: AppBar(
           leading: InkWell(
               onTap: () => Navigator.pop(context),
@@ -192,35 +229,43 @@ class OutGoingTransInfo extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 40.sp,
-                      backgroundColor: HexColor('73a5d2'),
-                      child: Text(
-                        'AS',
-                        style: TextStyle(color: Colors.white, fontSize: 30.sp),
-                      ),
-                    ),
+                    item.imagePath == null || item.imagePath == ''
+                        ? CircleAvatar(
+                            radius: 40.sp,
+                            backgroundColor: HexColor('73a5d2'),
+                            child: Text(
+                              getInitials(item.userName ?? ''),
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 30.sp),
+                            ),
+                          )
+                        : ClipOval(
+                            child: Image.file(
+                                fit: BoxFit.fill,
+                                File(item.imagePath ?? ''),
+                                height: 90.h,
+                                width: 90.w)),
                   ],
                 ),
                 SizedBox(
                   height: 25.h,
                 ),
                 Text(
-                  'User Name',
+                  item.userName ?? '',
                   style: TextStyle(fontSize: 20.sp),
                 ),
                 SizedBox(
                   height: 10.h,
                 ),
                 Text(
-                  '1254878454121545',
+                  item.iBan ?? 'Un known',
                   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
                 ),
                 SizedBox(
                   height: 15.h,
                 ),
                 Text(
-                  'User Name',
+                  item.iBan ?? 'Un known',
                   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
                 ),
                 SizedBox(
@@ -230,24 +275,23 @@ class OutGoingTransInfo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                            '-',
-                            style:
-                                TextStyle(color: Colors.red, fontSize: 40.sp),
-                          ),
+                      '-',
+                      style: TextStyle(color: Colors.red, fontSize: 40.sp),
+                    ),
                     SizedBox(
                       width: 2.w,
                     ),
                     Text(
-                      '10',
+                      item.ammount ?? 'Un known',
                       style: TextStyle(
                         fontSize: 35.sp,
-                        color:  Colors.red,
+                        color: Colors.red,
                       ),
                     ),
                     Icon(
                       Icons.euro,
                       size: 40.sp,
-                      color:  Colors.red,
+                      color: Colors.red,
                     ),
                   ],
                 ),
@@ -258,9 +302,19 @@ class OutGoingTransInfo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '3 ابريل 2023 علي 11:30 ص',
+                      textDirection: ui.TextDirection.ltr,
+                      '$formattedTime',
                       style: TextStyle(color: HexColor('94999d')),
-                    )
+                    ),
+                    Text(
+                      '  at  ',
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
+                    Text(
+                      textDirection: ui.TextDirection.ltr,
+                      '$formattedDate',
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
                   ],
                 ),
                 Row(
@@ -272,88 +326,77 @@ class OutGoingTransInfo extends StatelessWidget {
                     ),
                   ],
                 ),
-                
-
                 SizedBox(
                   height: 230.h,
                   child: ListView.separated(
-                    
-                              padding: EdgeInsets.only(bottom: 20),
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>dummyData[index].sent==true ? OutGoingTransInfo(item: dummyData[index],):  InComingTransInfo(item: dummyData[index],),));
-                                  },
-                                  child: Container(
-                                    height: 70.h,
-                                    width: screenWidth,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 5),
-                                    decoration: BoxDecoration(
-                                        color: HexColor('ffffff'),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft:
-                                              Radius.circular(index == 0 ? 10 : 0),
-                                          topRight:
-                                              Radius.circular(index == 0 ? 10 : 0),
-                                          bottomLeft: Radius.circular(
-                                              index == services.length - 1
-                                                  ? 10
-                                                  : 0),
-                                          bottomRight: Radius.circular(
-                                              index == services.length - 1
-                                                  ? 10
-                                                  : 0),
-                                        )),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          // crossAxisAlignment: CrossAxisAlignment.start,
-                                          textDirection: TextDirection.rtl,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 22.sp,
-                                              backgroundColor: HexColor('73a5d2'),
-                                              backgroundImage: AssetImage(services[index].iconPath??''),
-                                            ),
-                                            SizedBox(
-                                              width: 15.w,
-                                            ),
-                                            Column(
-                                              textDirection: TextDirection.rtl,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(services[index].title??''),
-                                                
-                                              ],
-                                            ),
-                                            Expanded(child: SizedBox()),
-                                            Icon(Icons.arrow_forward_ios,size: 15,color: Colors.grey,)
-                                          ],
-                                        )
-                                      ],
+                    padding: EdgeInsets.only(bottom: 20),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        height: 60.h,
+                        width: screenWidth,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                            color: HexColor('ffffff'),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(index == 0 ? 10 : 0),
+                              topRight: Radius.circular(index == 0 ? 10 : 0),
+                              bottomLeft: Radius.circular(
+                                  index == services.length - 1 ? 10 : 0),
+                              bottomRight: Radius.circular(
+                                  index == services.length - 1 ? 10 : 0),
+                            )),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              textDirection: ui.TextDirection.rtl,
+                              children: [
+                                CircleAvatar(
+                                  radius: 15.sp,
+                                  backgroundColor: HexColor('73a5d2'),
+                                  backgroundImage: AssetImage(
+                                      services[index].iconPath ?? ''),
+                                ),
+                                SizedBox(
+                                  width: 15.w,
+                                ),
+                                Column(
+                                  textDirection: ui.TextDirection.rtl,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      services[index].title ?? '',
+                                      style: TextStyle(fontSize: 12.sp),
                                     ),
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return Divider(
-                                  color: HexColor('f4f4f4'),
-                                  height: 0,
-                                  indent: 70.w,
-                                  // endIndent: 70.w,
-                                  thickness: 1,
-                                );
-                              },
-                              itemCount: dummyData.length,
-                            ),
+                                  ],
+                                ),
+                                Expanded(child: SizedBox()),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 15,
+                                  color: Colors.grey,
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return Divider(
+                        color: HexColor('f4f4f4'),
+                        height: 0,
+                        indent: 70.w,
+                        // endIndent: 70.w,
+                        thickness: 1,
+                      );
+                    },
+                    itemCount: services.length,
+                  ),
                 ),
-                
               ],
             ),
           ),
@@ -363,17 +406,21 @@ class OutGoingTransInfo extends StatelessWidget {
   }
 }
 
-
-class ServiceItem{
+class ServiceItem {
   String? iconPath;
   String? title;
 
-  ServiceItem({this.iconPath,this.title});
+  ServiceItem({this.iconPath, this.title});
 }
 
 List<ServiceItem> services = [
-  ServiceItem(iconPath: 'images/ic_bill_gray.png',title: 'الحصول على كشف المعاملة'),
-  ServiceItem(iconPath: 'images/ic_recurring_payment_green.png',title: 'تعيين كدفعة متكررة'),
-  ServiceItem(iconPath: 'images/ic_create_payment_blue.png',title: 'انشاء قالب'),
-  ServiceItem(iconPath: 'images/ic_split_bill_yellow.png',title: 'تقسيم الفاتورة')
+  ServiceItem(
+      iconPath: 'images/ic_bill_gray.png', title: 'الحصول على كشف المعاملة'),
+  ServiceItem(
+      iconPath: 'images/ic_recurring_payment_green.png',
+      title: 'تعيين كدفعة متكررة'),
+  ServiceItem(
+      iconPath: 'images/ic_create_payment_blue.png', title: 'انشاء قالب'),
+  ServiceItem(
+      iconPath: 'images/ic_split_bill_yellow.png', title: 'تقسيم الفاتورة')
 ];
