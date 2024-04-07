@@ -156,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             SizedBox(
                                               width:  85.w,
                                               child: Text(
+                                                textAlign: TextAlign.center,
                                                 accountName ?? 'unknown@outlook.com',
                                                 style: TextStyle(
                                                     fontSize: 10.sp,

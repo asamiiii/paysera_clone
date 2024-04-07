@@ -119,7 +119,7 @@ class _MainViewState extends State<MainView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              mail ?? 'Unknown',
+                              accountName ?? 'Unknown',
                               style: TextStyle(fontSize: 10.sp),
                             ),
                             Text(
