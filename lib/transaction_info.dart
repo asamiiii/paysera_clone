@@ -94,13 +94,13 @@ class InComingTransInfo extends StatelessWidget {
                   item.iBan ?? 'Un known',
                   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
                 ),
-                SizedBox(
-                  height: 15.h,
-                ),
-                Text(
-                  item.userName ?? 'Un known',
-                  style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
-                ),
+                // SizedBox(
+                //   height: 15.h,
+                // ),
+                // Text(
+                //   item.userName ?? 'Un known',
+                //   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
+                // ),
                 SizedBox(
                   height: 20.h,
                 ),
@@ -288,13 +288,13 @@ class OutGoingTransInfo extends StatelessWidget {
                   item.iBan ?? 'Un known',
                   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
                 ),
-                // SizedBox(
-                //   height: 15.h,
-                // ),
-                // Text(
-                //   item.userName ?? 'Un known',
-                //   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
-                // ),
+                SizedBox(
+                  height: 15.h,
+                ),
+                Text(
+                  item.userName ?? 'Un known',
+                  style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
+                ),
                 SizedBox(
                   height: 20.h,
                 ),
