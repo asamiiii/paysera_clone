@@ -175,6 +175,7 @@ class _EditProfileState extends State<EditProfile> {
                                                   DatePicker.showDateTimePicker(
                                                       context,
                                                       showTitleActions: true,
+                                                      
                                                       minTime:
                                                           DateTime(2011, 3, 5),
                                                       maxTime: DateTime.now(),

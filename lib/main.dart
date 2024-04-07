@@ -7,6 +7,7 @@ import 'package:paysera/cash_helper.dart';
 import 'package:paysera/main_view.dart';
 import 'package:paysera/trans.dart';
 import 'package:paysera/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 FToast? fToast;
 HexColor mainColor = HexColor('#87EA5C');
@@ -55,10 +56,18 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Paysera',
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: [
+            const Locale('en'), // English
+            const Locale('ar'), // Arabic
+            // Add more locales if needed
+          ],
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
             useMaterial3: true,
-            
           ),
           home: const SplashScreen(),
         );
@@ -77,89 +86,113 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<SplashScreen> {
-  
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_)async {
-    await checkFirstSeen();
-    accountName =await CacheHelper.getStringFromCache(key: 'account_name');
-    iBan =await CacheHelper.getStringFromCache(key: 'iban');
-    bankName =await CacheHelper.getStringFromCache(key: 'bank_name');
-    bankAddress =await CacheHelper.getStringFromCache(key: 'bank_address');
-    swift_bic =await CacheHelper.getStringFromCache(key: 'swift_bic');
-    bank_out_name =await CacheHelper.getStringFromCache(key: 'bank_out_name');
-    bank_out_address =await CacheHelper.getStringFromCache(key: 'bank_out_address');
-    bank_out_swift =await CacheHelper.getStringFromCache(key: 'bank_out_swift');
-  });
-   
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await checkFirstSeen();
+      accountName = await CacheHelper.getStringFromCache(key: 'account_name');
+      iBan = await CacheHelper.getStringFromCache(key: 'iban');
+      bankName = await CacheHelper.getStringFromCache(key: 'bank_name');
+      bankAddress = await CacheHelper.getStringFromCache(key: 'bank_address');
+      swift_bic = await CacheHelper.getStringFromCache(key: 'swift_bic');
+      bank_out_name =
+          await CacheHelper.getStringFromCache(key: 'bank_out_name');
+      bank_out_address =
+          await CacheHelper.getStringFromCache(key: 'bank_out_address');
+      bank_out_swift =
+          await CacheHelper.getStringFromCache(key: 'bank_out_swift');
+    });
+
     super.initState();
   }
 
-
-Future<void> checkFirstSeen() async {
-  bool? isAuth=false;
-  await showModalBottomSheet(
-    isScrollControlled: true,
-    context: context,
-    builder: (context) {
-      return StatefulBuilder(
-        builder:(context, setState) =>  SizedBox(
-          height: 250.h,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              const SizedBox(height: 10,),
-              const Text('Paysera',style: TextStyle(fontSize: 20),),
-              const SizedBox(height: 10,),
-              const Text('Use your fingerprint to continue',),
-              const SizedBox(height: 10,),
-              const Text('Unlock to login',),
-              const SizedBox(height: 10,),
-              TextButton(
-                onPressed: () async{
-                  setState(() {});
-                  isAuth=true;
-                  await Future.delayed(const Duration(seconds: 1));
-                  Navigator.pop(context); // Close the modal sheet
-                  openMainView(); // Open the main view
-                },
-                child:isAuth==false? Image.asset('images/fp.png',width: 50.w,height: 50.h,):Image.asset('images/check.png',width: 50.w,height: 50.h,),
-              ),
-              const Expanded(child: SizedBox()),
-              const Text('Touch the fingerprint sensor'),
-              Row(
-                children: [
-                  TextButton(onPressed: (){}, child: const Text('Use PIN')),
-                ],
-              )
-            ],
+  Future<void> checkFirstSeen() async {
+    bool? isAuth = false;
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => SizedBox(
+            height: 250.h,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Paysera',
+                  style: TextStyle(fontSize: 20),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Use your fingerprint to continue',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Unlock to login',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextButton(
+                  onPressed: () async {
+                    setState(() {});
+                    isAuth = true;
+                    await Future.delayed(const Duration(seconds: 1));
+                    Navigator.pop(context); // Close the modal sheet
+                    openMainView(); // Open the main view
+                  },
+                  child: isAuth == false
+                      ? Image.asset(
+                          'images/fp.png',
+                          width: 50.w,
+                          height: 50.h,
+                        )
+                      : Image.asset(
+                          'images/check.png',
+                          width: 50.w,
+                          height: 50.h,
+                        ),
+                ),
+                const Expanded(child: SizedBox()),
+                const Text('Touch the fingerprint sensor'),
+                Row(
+                  children: [
+                    TextButton(onPressed: () {}, child: const Text('Use PIN')),
+                  ],
+                )
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
-void openMainView() {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const MainView(),
-    ),
-  );
-}
+  void openMainView() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MainView(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: HexColor('#0885C5'),
       body: Center(
-          child: Image.asset(
-        'images/logo.png',
-        height: double.infinity,
-        width: double.infinity,
-        fit: BoxFit.fill
-      )),
+          child: Image.asset('images/logo.png',
+              height: double.infinity,
+              width: double.infinity,
+              fit: BoxFit.fill)),
     );
   }
 }
@@ -175,10 +208,7 @@ showMessage({String? msg, bool? sucsess}) {
       fontSize: 16.0);
 }
 
-List<DetailsData> listData = [
-
-];
-
+List<DetailsData> listData = [];
 
 Future<void> getAllLocalTrans() async {
   persons = await Hive.openBox('trans');
@@ -212,4 +242,3 @@ deleteItem(int id) async {
   });
   persons?.delete(desiredKey);
 }
-

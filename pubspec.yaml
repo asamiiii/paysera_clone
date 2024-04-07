@@ -49,6 +49,7 @@ dependencies:
   path_provider: ^2.1.1
   flutter_screenutil: ^5.9.0
   flutter_advanced_drawer: ^1.3.6
+  flutter_localization: ^0.2.0
   # fancy_drawer: ^2.0.0
   # flutter_localization: ^0.2.0
 

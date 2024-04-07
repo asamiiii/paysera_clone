@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -192,8 +193,16 @@ class OutGoingTransInfo extends StatelessWidget {
   Widget build(BuildContext context) {
      String formattedDate = DateFormat(
       'd MMM y',
+      
     ).format(item.time!);
-    String formattedTime = DateFormat('h:m a').format(item.time!);
+    var list= formattedDate.split(' ');
+    
+    debugPrint('date list : ${list.first}');
+    // String? day;
+    // String? month;
+    // String year;
+    String formattedTime = DateFormat('h:m a',).format(item.time!);
+    var timeList= formattedTime.split(' ');
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return Directionality(
@@ -203,7 +212,7 @@ class OutGoingTransInfo extends StatelessWidget {
         bottomNavigationBar: Container(
           width: screenWidth,
           color: Colors.white,
-          child: Image.asset('images/come.png',height: 50.h,)),
+          child: Image.asset('images/out.png',height: 50.h,)),
         appBar: AppBar(
           leading: InkWell(
               onTap: () => Navigator.pop(context),
@@ -252,7 +261,7 @@ class OutGoingTransInfo extends StatelessWidget {
                 ),
                 Text(
                   item.userName ?? '',
-                  style: TextStyle(fontSize: 20.sp),
+                  style: TextStyle(fontSize: 20.sp,fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 10.h,
@@ -265,7 +274,7 @@ class OutGoingTransInfo extends StatelessWidget {
                   height: 15.h,
                 ),
                 Text(
-                  item.iBan ?? 'Un known',
+                  item.userName ?? 'Un known',
                   style: TextStyle(fontSize: 15.sp, color: HexColor('858a90')),
                 ),
                 SizedBox(
@@ -303,18 +312,34 @@ class OutGoingTransInfo extends StatelessWidget {
                   children: [
                     Text(
                       textDirection: ui.TextDirection.ltr,
-                      '$formattedTime',
-                      style: TextStyle(color: HexColor('94999d')),
-                    ),
-                    Text(
-                      '  at  ',
+                      ' ${list[0]}',
                       style: TextStyle(color: HexColor('94999d')),
                     ),
                     Text(
                       textDirection: ui.TextDirection.ltr,
-                      '$formattedDate',
+                      ' ${convertEnglishMonthToArabic(list[1])} ',
                       style: TextStyle(color: HexColor('94999d')),
                     ),
+                    Text(
+                      textDirection: ui.TextDirection.ltr,
+                      '${list[2]}',
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
+                    Text(
+                      ' علي',
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
+                    Text(
+                      textDirection: ui.TextDirection.ltr,
+                      '${timeList[0]} ',
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
+                    Text(
+                      textDirection: ui.TextDirection.ltr,
+                      timeList[1]=='AM'?' ص' :' م ' ,
+                      style: TextStyle(color: HexColor('94999d')),
+                    ),
+                    
                   ],
                 ),
                 Row(
@@ -424,3 +449,24 @@ List<ServiceItem> services = [
   ServiceItem(
       iconPath: 'images/ic_split_bill_yellow.png', title: 'تقسيم الفاتورة')
 ];
+
+
+
+String? convertEnglishMonthToArabic(String? month) {
+  Map<String, String> monthMap = {
+    'Jan': 'يناير',
+    'Feb': 'فبراير',
+    'Mar': 'مارس',
+    'Apr': 'ابريل',
+    'May': 'مايو',
+    'Jun': 'يونيو',
+    'Jul': 'يوليو',
+    'Aug': 'اغسطس',
+    'Sep': 'سبتمبر',
+    'Oct': 'اكتوبر',
+    'Nov': 'نوفمبر',
+    'Dec': 'ديسمبر',
+  };
+
+  return monthMap.containsKey(month) ? monthMap[month] : null;
+}

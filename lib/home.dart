@@ -142,27 +142,54 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 30.h,
                                     width: 130.w,
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 8.w, vertical: 1),
+                                        horizontal: 4.w, vertical: 1),
                                     decoration: BoxDecoration(
                                         color: HexColor('0C457A'),
                                         borderRadius:
                                             BorderRadius.circular(25)),
-                                    child: Column(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          mail ?? 'unknown@outlook.com',
-                                          style: TextStyle(
-                                              fontSize: 10.sp,
-                                              color: Colors.white),
-                                          overflow: TextOverflow.ellipsis,
+                                       Expanded(child: SizedBox()),
+                                        Column(
+                                          children: [
+                                            SizedBox(
+                                              width:  85.w,
+                                              child: Text(
+                                                accountName ?? 'unknown@outlook.com',
+                                                style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    color: Colors.white),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            Text(
+                                              'حساب دفع',
+                                              style: TextStyle(
+                                                  fontSize: 6.sp,
+                                                  color: Colors.white),
+                                              overflow: TextOverflow.ellipsis,
+                                            )
+                                          ],
                                         ),
-                                        Text(
-                                          'حساب دفع',
-                                          style: TextStyle(
-                                              fontSize: 6.sp,
-                                              color: Colors.white),
-                                          overflow: TextOverflow.ellipsis,
-                                        )
+                                        const Expanded(child: SizedBox()),
+                                         image == null
+                              ? CircleAvatar(
+                                  radius: 15,
+                                  backgroundColor: Colors.grey[200],
+                                  child: Text(
+                                    firstChar == null || firstChar!.isEmpty
+                                        ? ''
+                                        : firstChar ?? '',
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                )
+                              : ClipOval(
+                                  child: Image.file(
+                                      fit: BoxFit.fill,
+                                      image!,
+                                      height: 30,
+                                      width: 30)),
                                       ],
                                     ),
                                   )
@@ -301,18 +328,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               return Dismissible(
                                 key: Key(listData[index].id.toString()),
                                 direction: DismissDirection.horizontal,
-                                onDismissed: (direction)async {
+                                onDismissed: (direction) async {
                                   await deleteItem(listData[index].id ?? 0);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainView()));
-        Fluttertoast.showToast(
-            msg: "Transaction is deleted",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MainView()));
+                                  Fluttertoast.showToast(
+                                      msg: "Transaction is deleted",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
                                 },
                                 child: InkWell(
                                   onTap: () {
@@ -351,7 +380,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   : 0),
                                         )),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Row(
                                           mainAxisAlignment:
@@ -367,9 +397,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     backgroundColor:
                                                         HexColor('73a5d2'),
                                                     child: Text(
-                                                      getInitials(listData[index]
-                                                              .userName ??
-                                                          ''),
+                                                      getInitials(
+                                                          listData[index]
+                                                                  .userName ??
+                                                              ''),
                                                       style: TextStyle(
                                                           color: Colors.white),
                                                     ),
@@ -377,7 +408,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 : ClipOval(
                                                     child: Image.file(
                                                         fit: BoxFit.fill,
-                                                        File(listData[index].imagePath??''),
+                                                        File(listData[index]
+                                                                .imagePath ??
+                                                            ''),
                                                         height: 42.h,
                                                         width: 42.w)),
                                             SizedBox(
@@ -388,12 +421,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text(listData[index].userName??''),
-                                                Text(
-                                                 listData[index].bankName??'',
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 10.sp),
+                                                Text(listData[index].userName ??
+                                                    ''),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                         listData[index].sent==true?' Sent to ':  ' Envoye depuis ',
+                                                      style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 10.sp),
+                                                    ),
+                                                    Text(
+                                                      listData[index].bankName ??
+                                                          '',
+                                                      style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 10.sp),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
@@ -416,19 +461,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 Icon(
                                                   Icons.euro,
                                                   size: 18.sp,
-                                                  color:
-                                                      listData[index].sent == true
-                                                          ? Colors.red
-                                                          : Colors.green,
+                                                  color: listData[index].sent ==
+                                                          true
+                                                      ? Colors.red
+                                                      : Colors.green,
                                                 ),
                                                 Text(
-                                                  listData[index].ammount??'',
+                                                  listData[index].ammount ?? '',
                                                   style: TextStyle(
                                                     fontSize: 15.sp,
-                                                    color: listData[index].sent ==
-                                                            true
-                                                        ? Colors.red
-                                                        : Colors.green,
+                                                    color:
+                                                        listData[index].sent ==
+                                                                true
+                                                            ? Colors.red
+                                                            : Colors.green,
                                                   ),
                                                 ),
                                               ],
